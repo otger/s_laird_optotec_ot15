@@ -104,3 +104,45 @@ class ThermoElectric(object):
         d = 5.35273806e-04
 
         return a*
+
+    def _get_kappa(self):
+        """Values have been calculated using values on Laird Technologies document
+        and made a fit
+        Temperatures: [273, 300, 325, 350, 375, 400, 425, 450, 475]
+        kappa: [ 0.0161,  0.0151,  0.0153,  0.0155,  0.0158,  0.0163,  0.0173,
+                0.0188,  0.0209]
+        kappa = a*T + b *T*T + c*T*T*T + d
+
+        a = 6.06270280e-06
+        b = -2.30792066e-07
+        c = 4.43869633e-10
+        d = 2.24397747e-02
+
+        """
+        a = 6.06270280e-06
+        b = -2.30792066e-07
+        c = 4.43869633e-10
+        d = 2.24397747e-02
+
+        return a*
+
+    def _get_zetta(self):
+        """Values have been calculated using values on Laird Technologies document
+        and made a fit
+        Temperatures: [273, 300, 325, 350, 375, 400, 425, 450, 475]
+        zetta: [0.00254,  0.00268,  0.00244,  0.00222,  0.00185,  0.00159,
+                0.00132,  0.00108,  0.00087]
+        zetta = a*T + b *T*T + c*T*T*T + d
+
+        a = 1.82845995e-04
+        b = -5.04512226e-07
+        c = 4.33203649e-10
+        d = -1.85492384e-02
+
+        """
+        a = 1.82845995e-04
+        b = -5.04512226e-07
+        c = 4.33203649e-10
+        d = -1.85492384e-02
+
+        return a*
