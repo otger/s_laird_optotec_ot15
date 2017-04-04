@@ -1,0 +1,2 @@
+recursive-include s_laird_optotec_ot15/web/templates *
+recursive-include s_laird_optotec_ot15/web/bp_static *
