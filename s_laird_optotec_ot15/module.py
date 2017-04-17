@@ -3,7 +3,7 @@
 from entropyfw import Module
 from entropyfw.common import get_utc_ts
 
-from .actions import UpdateV, UpdateI, UpdateVI, UpdateTemperaturesContantQc
+from .callbacks import UpdateV, UpdateI, UpdateVI, UpdateTemperaturesConstantQc
 # from .web.api.resources import get_api_resources
 # from .web.blueprints import get_blueprint
 """
@@ -11,27 +11,6 @@ module
 Created by otger on 04/04/17.
 All rights reserved.
 """
-
-class EntropyLairdOT15ConstantQc(EntropyLairdOT15):
-    name = 'lairdot15'
-    description = "Entropy module to keep a TE OT15 constantly pumping heat"
-
-    def __init__(self, name=None, low_threshold = 288, high_threshold = 289, qc = 1):
-        # If cold side is below low_threshold it will stop TE
-        # If cold side is above high_threshold it will start pumping heat
-        self.tc_keyword = None
-        self.th_keyword = None
-        self.low_threshold = low_threshold
-        self.high_threshold = high_threshold
-        self.target_qc = qc
-
-    def register_temp_event(self, event_name, tc_keyword, th_keyword, flags=0):
-        if self.tc_keyword is None and self.th_keyword is None:
-            self.tc_keyword = tc_keyword
-            self.th_keyword = th_keyword
-            self.register_callback(callback=UpdateTemperaturesConstantQc, pattern=event_name, flags=flags)
-        else:
-            raise Exception('Only one event for tc, th values can be registered')
 
 
 class EntropyLairdOT15(Module):
@@ -98,6 +77,29 @@ class EntropyLairdOT15(Module):
         if i:
             self.te.I = i
         self.pub_status()
+
+
+class EntropyLairdOT15ConstantQc(EntropyLairdOT15):
+    name = 'lairdot15'
+    description = "Entropy module to keep a TE OT15 constantly pumping heat"
+
+    def __init__(self, name=None, low_threshold=288, high_threshold=289, qc=1):
+        EntropyLairdOT15.__init__(self, name)
+        # If cold side is below low_threshold it will stop TE
+        # If cold side is above high_threshold it will start pumping heat
+        self.tc_keyword = None
+        self.th_keyword = None
+        self.low_threshold = low_threshold
+        self.high_threshold = high_threshold
+        self.target_qc = qc
+
+    def register_temp_event(self, event_name, tc_keyword, th_keyword, flags=0):
+        if self.tc_keyword is None and self.th_keyword is None:
+            self.tc_keyword = tc_keyword
+            self.th_keyword = th_keyword
+            self.register_callback(callback=UpdateTemperaturesConstantQc, pattern=event_name, flags=flags)
+        else:
+            raise Exception('Only one event for tc, th values can be registered')
 
 
 class TEDevices(object):

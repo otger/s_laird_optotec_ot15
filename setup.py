@@ -9,7 +9,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
 PACKAGEFULLNAME = 's_laird_optotec_ot15'
 PACKAGENAME = 's_laird_optotec_ot15'
-DESCRIPTION = 'Module to calculate operating values in an entropy system'
+DESCRIPTION = 'Module to calculate operating values of a thermo electic cooler in an entropy system'
 LONG_DESCRIPTION = ''
 AUTHOR = 'Otger Ballester'
 AUTHOR_EMAIL = 'otger@ifae.es'
@@ -18,7 +18,7 @@ URL = None
 VERSION = '0.0.2'
 RELEASE = 'dev' not in VERSION
 
-print(find_packages('s_pico_tc08'))
+print(find_packages('s_laird_optotec_ot15'))
 # Read the version information
 #execfile(os.path.join(here, '__init__.py'))
 setup(
@@ -26,7 +26,7 @@ setup(
       version=VERSION,
       description=DESCRIPTION,
       #scripts=scripts,
-      requires=[''],
+      requires=[],
       install_requires=[],
       provides=[PACKAGENAME],
       author=AUTHOR,
