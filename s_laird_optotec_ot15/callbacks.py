@@ -60,9 +60,5 @@ class UpdateTemperaturesConstantQc(Callback):
         tc = getattr(self.event.value, self.module.tc_keyword, None)
         th = getattr(self.event.value, self.module.th_keyword, None)
         self.module.update_values(tc=tc, th=th)
-        if tc < self.module.low_threshold:
-            self.module.pub_event('constant_qc_vi', {'Voltage': 0,
-                                                     'Current': 0})
-        if tc > self.module.high_threshold:
-            d = self.module.calculate(self.target_qc)
-            self.module.pub_event('constant_qc_vi', d)
+        d = self.module.calculate(self.target_qc)
+        self.module.pub_event('constant_qc_vi', d)
