@@ -41,8 +41,8 @@ class EntropyLairdOT15(Module):
     def calculate(self, heat_c):
         """Return values of Voltage and Current to input at TE to have 'heat_c' pumped from cold side"""
         d = self.te.calc_V_I(heat_c)
-        return {'Voltage': d[0],
-                'Current': d[1]}
+        return {'voltage': d[0],
+                'current': d[1]}
 
     def register_event_v_applied(self, pattern, v_keyword, flags=0):
         if self.v_keyword is None:
@@ -50,7 +50,6 @@ class EntropyLairdOT15(Module):
             self.register_callback(callback=UpdateV, pattern=pattern, flags=flags)
         else:
             raise Exception('Only one event for V values can be registered')
-
 
     def register_event_i_applied(self, pattern, i_keyword, flags=0):
         if self.i_keyword is None:
