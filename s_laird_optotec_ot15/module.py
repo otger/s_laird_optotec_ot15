@@ -4,6 +4,7 @@ from entropyfw import Module
 from entropyfw.common import get_utc_ts
 
 from .callbacks import UpdateV, UpdateI, UpdateVI, UpdateTemperaturesConstantQc
+from .logger import log
 # from .web.api.resources import get_api_resources
 # from .web.blueprints import get_blueprint
 """
@@ -89,7 +90,7 @@ class EntropyLairdOT15ConstantQc(EntropyLairdOT15):
         self.target_qc = qc
 
     def register_temp_event(self, event_name, tc_keyword, th_keyword, flags=0):
-        if self.tc_keyword is not None and self.th_keyword is not None:
+        if self.tc_keyword is None and self.th_keyword is None:
             self.tc_keyword = tc_keyword
             self.th_keyword = th_keyword
             self.register_callback(callback=UpdateTemperaturesConstantQc, pattern=event_name, flags=flags)
@@ -112,7 +113,7 @@ GEOMETRY_FACTORS = {TEDevices.ot08xx05: 0.016,
 
 class ThermoElectric(object):
 
-    def __init__(self, N=1, device=TEDevices.ot15xx05):
+    def __init__(self, N=30, device=TEDevices.ot15xx05):
         self.N = N
         self.I = 0  # real applied current
         self.V = 0  # real applied voltage
@@ -256,7 +257,7 @@ class ThermoElectric(object):
         """Return value of V to get an specific heat pumped at the cold side"""
 
         Ip, In = self._calc_I(qc)
-
+        log.debug('Calculated current values: {}, {} for status: {}'.format(Ip, In, self.status))
         if Ip > 0 and In > 0:
             I = min(Ip, In)
         elif Ip > 0:
@@ -264,7 +265,7 @@ class ThermoElectric(object):
         elif In > 0:
             I = In
         else:
-            raise Exception("Current should be positive. Calculated urrent values (Ip, In): {0}".format((Ip, In)))
+            raise Exception("Current should be positive. Calculated current values (Ip, In): {0}".format((Ip, In)))
 
         self.calculated_V = 2*self.N*(((I*self.rho)/self.G) + self.alpha*self.t_delta)
         self.calculated_I = I
@@ -286,7 +287,7 @@ class ThermoElectric(object):
                 'Imax': self.Imax,
                 'I_optimum': self.Iopt,
                 'calc_desired_qc': self.calculated_Qc,
-                'calc_I_roots': self.calculated_I_roots,
+                # 'calc_I_roots': self.calculated_I_roots,
                 'calc_I': self.calculated_I,
                 'calc_V': self.calculated_V,
                 't_hot': self.th,

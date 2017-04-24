@@ -41,10 +41,16 @@ class UpdateVI(Callback):
     version = "0.1"
 
     def functionality(self):
-        i = getattr(self.event.value, self.module.i_keyword, None)
-        v = getattr(self.event.value, self.module.v_keyword, None)
+        i = self.event.value.get(self.module.i_keyword, None)
+        v = self.event.value.get(self.module.v_keyword, None)
         if i is None or v is None:
-            logger.log.warning("Updatevi Callback event has no valid I or V value")
+            logger.log.warning("Updatevi Callback event has no valid I or V value. \
+                                \nEvent value: {}".format(self.event.value))
+            return
+        if i < 0:
+            i = 0
+        if v < 0:
+            v = 0
         self.module.update_values(i=i, v=v)
 
 
@@ -57,8 +63,8 @@ class UpdateTemperaturesConstantQc(Callback):
         Callback.__init__(self, event, manager, module)
 
     def functionality(self):
-        tc = getattr(self.event.value, self.module.tc_keyword, None)
-        th = getattr(self.event.value, self.module.th_keyword, None)
+        tc = self.event.value.get(self.module.tc_keyword)
+        th = self.event.value.get(self.module.th_keyword)
         self.module.update_values(tc=tc, th=th)
-        d = self.module.calculate(self.target_qc)
+        d = self.module.calculate(self.module.target_qc)
         self.module.pub_event('constant_qc_vi', d)
