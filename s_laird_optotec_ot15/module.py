@@ -257,7 +257,7 @@ class ThermoElectric(object):
         """Return value of V to get an specific heat pumped at the cold side"""
 
         Ip, In = self._calc_I(qc)
-        log.debug('Calculated current values: {}, {} for status: {}'.format(Ip, In, self.status))
+        # log.debug('Calculated current values: {}, {} for status: {}'.format(Ip, In, self.status))
         if Ip > 0 and In > 0:
             I = min(Ip, In)
         elif Ip > 0:
